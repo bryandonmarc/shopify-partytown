@@ -138,8 +138,14 @@ app.get('/shopify/callback', async (req, res) => {
 
         console.log(`Fetching: ${shopRequestUrl}`)
         fetch(shopRequestUrl, { headers: shopRequestHeaders })
-          .then((shopResponse) => shopResponse.json())
           .then((shopResponse) => {
+            console.log(`Return shop response:`)
+            console.log(shopResponse)
+            return shopResponse.json()
+          })
+          .then((shopResponse) => {
+            console.log(`Return shop response JSON:`)
+            console.log(shopResponse)
             res.status(200).end(shopResponse);
           })
           .catch((error) => {
