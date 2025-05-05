@@ -3,7 +3,7 @@ require('isomorphic-fetch');
 const compression = require('compression');
 const express = require('express');
 const app = express();
-const crypto = require('crypto');
+const node_crypto = require('crypto');
 const cookie = require('cookie');
 const nonce = require('nonce')();
 const querystring = require('querystring');
@@ -93,7 +93,7 @@ app.get('/shopify/callback', async (req, res) => {
     const message = querystring.stringify(map);
     const providedHmac = Buffer.from(hmac, 'utf-8');
     const generatedHash = Buffer.from(
-      crypto
+      node_crypto
         .createHmac('sha256', apiSecret)
         .update(message)
         .digest('hex'),
@@ -102,7 +102,7 @@ app.get('/shopify/callback', async (req, res) => {
     let hashEquals = false;
     // timingSafeEqual will prevent any timing attacks. Arguments must be buffers
     try {
-      hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac)
+      hashEquals = node_crypto.timingSafeEqual(generatedHash, providedHmac)
     // timingSafeEqual will return an error if the input buffers are not the same length.
     } catch (e) {
       hashEquals = false;
@@ -141,11 +141,13 @@ app.get('/shopify/callback', async (req, res) => {
             res.status(200).end(shopResponse);
           })
           .catch((error) => {
-            res.status(error.statusCode).send(error.error.error_description);
+            console.log(error)
+            res.status(error.statusCode).send("Unexpected Error. See server logs for details.");
           });
       })
       .catch((error) => {
-        res.status(error.statusCode).send(error.error.error_description);
+        console.log(error)
+        res.status(error.statusCode).send("Unexpected Error. See server logs for details.");
       });
 
   } else {
