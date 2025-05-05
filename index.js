@@ -120,6 +120,7 @@ app.get('/shopify/callback', async (req, res) => {
       code,
     };
 
+    console.log(`Fetching: ${accessTokenRequestUrl}`)
     fetch(accessTokenRequestUrl, {
       method: 'POST',
       headers: {
@@ -135,6 +136,7 @@ app.get('/shopify/callback', async (req, res) => {
           'X-Shopify-Access-Token': accessToken,
         };
 
+        console.log(`Fetching: ${shopRequestUrl}`)
         fetch(shopRequestUrl, { headers: shopRequestHeaders })
           .then((shopResponse) => shopResponse.json())
           .then((shopResponse) => {
